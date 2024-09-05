@@ -1,3 +1,5 @@
 #define SECRET_SSID ""
 #define SECRET_PASS ""
 #define SECRET_HOST ""
+#define SECRET_TAG "Opta01"
+#define SECRET_KEY "Synvia123"
