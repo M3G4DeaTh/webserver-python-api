@@ -17,8 +17,11 @@ def getAllData(self: users.users):
         if data != []:
             for x in range(len(data)):
                 for i in range(len(columnName)):
-                    register[str(columnName[i][0])] = []
-                    register[str(columnName[i][0])].append(data[x][i])
+                    if str(columnName[i][0]) in register:
+                        register[str(columnName[i][0])].append(data[x][i])
+                    else:
+                        register[str(columnName[i][0])] = []
+                        register[str(columnName[i][0])].append(data[x][i])
         print(register)
         return json.dumps(register, indent=4)
     else:
@@ -35,7 +38,6 @@ def getData(self: users.users, id: str):
                                         AND table_name = 'log';")
         register = {}
         if data != []:
-            
             for i in range(len(columnName)):
                 register[str(columnName[i][0])] = []
                 register[str(columnName[i][0])].append(data[0][i])

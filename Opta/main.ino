@@ -24,12 +24,11 @@ const char *password = SECRET_PASS;
 
 float inputs[4];
 const byte inputPins[] = {A0, A1, A2, A3};
-
+int r = 0;
 void setup() {
-  pinMode(A0, INPUT);
-  pinMode(A1, INPUT);
-  pinMode(A2, INPUT);
-  pinMode(A3, INPUT);
+  analogReadResolution(12);
+  pinMode(D0, OUTPUT);
+  pinMode(D1, OUTPUT);
   Serial.begin(9600);
   info = boardInfo();
 
@@ -50,21 +49,27 @@ void loop() {
       inputs[i] = analogRead(inputPins[i]);
     }
     else if (analogRead(inputPins[i]) < 0){
-      
+      r = r+1;
       inputs[i] = 0;
     }
   }
-  
-  result = http.httpT(wifi, inputs);
-  if (result == 0)
-  {
-    // String response = httpClient.responseBody();
-    // Serial.println(response);
-    Serial.println("success!");
+  if (r < 4){
+    result = http.httpT(wifi, inputs);
+    if (result == 0)
+    {
+      digitalWrite(D0, HIGH);
+      digitalWrite(D1, LOW);
+      // String response = httpClient.responseBody();
+      // Serial.println(response);
+      Serial.println("success!");
+    }
+    else
+    {
+      digitalWrite(D0, LOW);
+      digitalWrite(D1, HIGH);
+      Serial.println("fail!");
+    }
   }
-  else
-  {
-    Serial.println("fail!");
-  }
+  r = 0;
   delay(500); // Ping every 5s.
 }
