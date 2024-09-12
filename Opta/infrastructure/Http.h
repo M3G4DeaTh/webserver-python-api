@@ -4,7 +4,7 @@
 #include "arduinoSecrets.h"
 
 WiFiClient wifi;
-int httpT(WiFiClient wifi, int array[]){
+int httpT(WiFiClient wifi, float array[]){
     HttpClient client = HttpClient(wifi, SECRET_HOST, 5000); // IP address and port of the HTTP server.
     String postData = "["+(String) array[0]+","+(String) array[0]+","+(String) array[0]+","+(String) array[0]+"]"
     // int result = client.post("/api/Machines/Receive", "Content-Type" : "application/json", "["+(String) array[0]+","+(String) array[0]+","+(String) array[0]+","+(String) array[0]+"]");

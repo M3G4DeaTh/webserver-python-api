@@ -2,8 +2,10 @@
 import flask
 import flask_login
 from model import device
-from model.services import bypass
-from model.services import register
+from model import users
+from services import bypass
+from services import register
+from services import getData
 from flask import request
 
 ######################################################## INIT ########################################################
@@ -50,15 +52,13 @@ def api():
         user  = device.iotDevice('null', 'null', False, 0.0, 0.0, 0.0, 0.0)
         user.set_tag(tag)
         user.set_password(password)
-        if bypass.login(user):
-            user.set_logged(True)
+        bypass.login(user)
+        if user.get_logged():
             userid = User()
             userid.id = 1
             userid.name = user.get_tag()
             userid.privileges = 3
-
         else:
-            user.set_logged(False) 
             flask.abort(401)
         
         if (content_type == 'application/json'):
@@ -69,11 +69,10 @@ def api():
             user.set_input02(float(response[1]))
             user.set_input03(float(response[2]))
             user.set_input04(float(response[3]))
-            status = register.statusVerify(user)
-            if status:
-                dataRegister = register.dataRegister(user)
-                if dataRegister:
-                    return 'success'
+            register.statusVerify(user)
+            dataRegister = register.dataRegister(user)
+            if dataRegister:
+                return 'success'
             else:
                 flask.abort(403)
             
@@ -83,13 +82,38 @@ def api():
     else:
         flask.abort(405)
 
-######################################################################################################################
 
 
+@app.route('/device', methods = ['GET'])
+@app.route('/device/<string:id>', methods=['GET'])
+def devices(id = None):
+    # userid = flask_login.current_user.get_id() 
+    if flask.request.method == 'GET':
+        content_type = request.headers.get('Content-Type')
+        tag = request.headers.get('tag')
+        password = request.headers.get('password')
+        user  = users.users('null', 'null', False)
+        user.set_tag(tag)
+        user.set_password(password)
+        if bypass.login(user):
+            user.set_logged(True)
+            userid = User()
+            userid.id = 1
+            userid.name = user.get_tag()
+            userid.privileges = 3
+        else:
+            flask.abort(401)
+        
+        if (content_type == 'application/json'):
+            if id is not None:
+                return getData.getData(user, id)
+            else:
+                return getData.getAllData(user)
+            
+        else:
+            return 'Content-Type not supported!'
+        
+    else:
+        flask.abort(405)
 
-
-######################################################## VIEWS ########################################################
-
-
-
-app.run(host='172.27.80.1', port=5000, debug=True)
+app.run(host='10.104.2.8', port=5000, debug=True)

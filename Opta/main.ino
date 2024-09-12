@@ -22,7 +22,7 @@ int status = WL_IDLE_STATUS;
 const char *ssid = SECRET_SSID;
 const char *password = SECRET_PASS;
 
-int inputs[4];
+float inputs[4];
 const byte inputPins[] = {A0, A1, A2, A3};
 
 void setup() {
@@ -44,12 +44,12 @@ void setup() {
 }
 
 void loop() {
-  for (i = 0; i <4; i++){
-    if (digitalRead(inputPins[i])){
+  for (i = 0; i < 4; i++){
+    if (analogRead(inputPins[i]) > 0){
       
-      inputs[i] = 1;
+      inputs[i] = analogRead(inputPins[i]);
     }
-    else if (!digitalRead(inputPins[i])){
+    else if (analogRead(inputPins[i]) < 0){
       
       inputs[i] = 0;
     }
