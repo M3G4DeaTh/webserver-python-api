@@ -1,12 +1,12 @@
 
 #include <ArduinoHttpClient.h>
-#include <WiFi101.h>
-#include "arduinoSecrets.h"
+#include <WiFi.h>
+#include "arduino_secrets.h"
 
-WiFiClient wifi;
+
 int httpT(WiFiClient wifi, float array[]){
     HttpClient client = HttpClient(wifi, SECRET_HOST, 5000); // IP address and port of the HTTP server.
-    String postData = "["+(String) array[0]+","+(String) array[0]+","+(String) array[0]+","+(String) array[0]+"]"
+    String postData = "["+(String) array[0]+","+(String) array[1]+","+(String) array[2]+","+(String) array[3]+"]";
     // int result = client.post("/api/Machines/Receive", "Content-Type" : "application/json", "["+(String) array[0]+","+(String) array[0]+","+(String) array[0]+","+(String) array[0]+"]");
     client.beginRequest();
     client.post("/api/Machines/Receive");
@@ -17,5 +17,7 @@ int httpT(WiFiClient wifi, float array[]){
     client.print(postData);
     client.endRequest();
     int statusCode = client.responseStatusCode();
-    return statusCode;
+    String response = client.responseBody();
+    int i = 0;
+    return statusCode, i;
 }

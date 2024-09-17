@@ -49,7 +49,7 @@ def api():
         content_type = request.headers.get('Content-Type')
         tag = request.headers.get('tag')
         password = request.headers.get('password')
-        user  = device.iotDevice('null', 'null', False, 0.0, 0.0, 0.0, 0.0, False)
+        user  = device.iotDevice('null', 'null', False, 0.0, 0.0, 0.0, 0.0, False, 0.0)
         user.set_tag(tag)
         user.set_password(password)
         bypass.login(user)
@@ -72,7 +72,8 @@ def api():
             register.statusVerify(user)
             dataRegister = register.dataRegister(user)
             if dataRegister:
-                return 'success'
+                
+                return str(user.get_standard())
             else:
                 flask.abort(403)
             
@@ -116,4 +117,4 @@ def devices(id = None):
     else:
         flask.abort(405)
 
-app.run(host='10.104.2.79', port=5000, debug=True)
+app.run(host='10.104.2.34', port=5000, debug=True)

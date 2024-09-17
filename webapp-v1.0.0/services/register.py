@@ -12,6 +12,7 @@ def statusVerify(self: device.iotDevice):
     if self.get_logged() == True:
         try:
             tagVerify = databaseOBJ.readRaw("SELECT standard FROM devices WHERE tag ='"+self.get_tag()+"'")
+            self.set_standard(float(tagVerify[0][0]))
         except:
             return False
         if self.get_input01() >= float(tagVerify[0][0]) and self.get_input02() >= float(tagVerify[0][0]) and self.get_input03() >= float(tagVerify[0][0]) and self.get_input04() >= float(tagVerify[0][0]):

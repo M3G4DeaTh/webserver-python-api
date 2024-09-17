@@ -1,6 +1,6 @@
 class iotDevice:
     # Model creation (Constructor)
-    def __init__(self, tag: str, password: str, logged: bool, input01: float, input02: float, input03: float, input04: float, status: bool):
+    def __init__(self, tag: str, password: str, logged: bool, input01: float, input02: float, input03: float, input04: float, status: bool, standard: float):
         self._tag = tag
         self._password = password
         self._logged = logged
@@ -9,6 +9,7 @@ class iotDevice:
         self._input03 = input03
         self._input04 = input04
         self._status = status
+        self._standard = standard
 
     # Get and Setters
     def get_tag(self):
@@ -50,5 +51,10 @@ class iotDevice:
         return self._status
     def set_status(self, value):
         self._status = value
+    
+    def get_standard(self):
+        return self._standard
+    def set_standard(self, value):
+        self._standard = value
 
     
