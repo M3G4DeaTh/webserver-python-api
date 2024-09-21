@@ -65,17 +65,20 @@ def api():
             response = str(request.data)
             response = response.strip("b'[]")
             response = response.split(",")
-            user.set_input01(float(response[0]))
-            user.set_input02(float(response[1]))
-            user.set_input03(float(response[2]))
-            user.set_input04(float(response[3]))
-            register.statusVerify(user)
-            dataRegister = register.dataRegister(user)
-            if dataRegister:
-                
-                return str(user.get_standard())
+            print(response)
+            if response[0] != '':
+                user.set_input01(float(response[0]))
+                user.set_input02(float(response[1]))
+                user.set_input03(float(response[2]))
+                user.set_input04(float(response[3]))
+                register.statusVerify(user)
+                dataRegister = register.dataRegister(user)
+                if dataRegister:
+                    return str(user.get_standard())
+                else:
+                    flask.abort(403)
             else:
-                flask.abort(403)
+                flask.abort(400)
             
         else:
             return 'Content-Type not supported!'
@@ -117,4 +120,4 @@ def devices(id = None):
     else:
         flask.abort(405)
 
-app.run(host='10.104.2.34', port=5000, debug=True)
+app.run(host='192.168.0.8', port=5000, debug=True)
