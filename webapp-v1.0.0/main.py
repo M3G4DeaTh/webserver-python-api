@@ -175,5 +175,5 @@ def register(tag = None, password = None, standard = None):
             flask.abort(401)
         if (content_type == 'application/json'):
             
-
+            
 app.run(host='192.168.0.8', port=5000, debug=True)

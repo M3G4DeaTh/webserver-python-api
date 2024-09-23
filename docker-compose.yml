@@ -14,7 +14,7 @@ services:
       - senai-compose-network
   
   senai-compose-webapp:
-    image: lucasvss90/multitools:1.0.9
+    image: webapp:1.0.0
     environment:
       DBUSER: "postgres"
       DBPASSWORD: "postgres"
