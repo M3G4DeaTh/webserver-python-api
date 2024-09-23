@@ -1,5 +1,6 @@
 from infrastructure import database
 import jwt
+import bcrypt
 from model import device
 from model import users
 #Database configuration
@@ -26,4 +27,26 @@ def userValid(self):
         else:
             return False
 
-def registerDevice(tag: str, password: str):
+def registerDevice(self):
+    if isinstance(self, device.iotDevice):
+        password = self.get_password()
+        token = jwt.encode({"tag": str(self.get_tag())}, "secret", algorithm="HS256")
+        tag = token.split('.')
+        tag = tag[1]
+        hash = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
+        try:
+            databaseOBJ.writeRaw("INSERT INTO devices(tag, password, standard, status) VALUES('"+str(tag)+"', '"+str(hash)+"', '"+str(self.get_standard())+"', TRUE)")
+            return True
+        except:
+            return False
+    elif isinstance(self, users.users):
+        password = self.get_password()
+        token = jwt.encode({"tag": str(self.get_tag())}, "secret", algorithm="HS256")
+        tag = token.split('.')
+        tag = tag[1]
+        hash = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
+        try:
+            databaseOBJ.writeRaw("INSERT INTO users(tag, password, status) VALUES('"+str(tag)+"', '"+str(hash)+"', TRUE)")
+            return True
+        except:
+            return False

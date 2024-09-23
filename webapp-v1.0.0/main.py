@@ -144,16 +144,20 @@ def register(tag = None, password = None, standard = None):
                 userSys = device.iotDevice('null', 'null', False, 0.0, 0.0, 0.0, 0.0, False, 0.0)
                 userSys.set_tag(tag)
                 userSys.set_password(password)
+                userSys.set_standard(standard)
             else:
                 userSys = users.users('null', 'null', False)
                 userSys.set_tag(tag)
                 userSys.set_password(password)
             if registerUser.userValid(userSys):
-
+                try:
+                    registerUser.registerDevice(userSys)
+                except:
+                    flask.abort(405)
             else:
                 response = flask.Flask.make_response('Response')
-                response.headers[]
-                return flask.make_response()
+                response.headers['Error: '] = 'User is already used!'
+                return response
 
 
 
