@@ -118,7 +118,7 @@ def devices(id = None):
     else:
         flask.abort(405)
 
-
+@app.route('/register/<string:devicetag>', methods= ['GET'])
 @app.route('/register/<string:tag>/<string:password>', methods= ['POST'])
 @app.route('/register/<string:tag>/<string:password>/<string:standard>', methods= ['POST'])
 def register(tag = None, password = None, standard = None):
@@ -158,7 +158,22 @@ def register(tag = None, password = None, standard = None):
                 response = flask.Flask.make_response('Response')
                 response.headers['Error: '] = 'User is already used!'
                 return response
-
-
+    elif flask.request.method == 'GET':
+        content_type = request.headers.get('Content-Type')
+        tagUser = request.headers.get('tag')
+        passwordUser = request.headers.get('password')
+        user  = users.users('null', 'null', False)
+        user.set_tag(tagUser)
+        user.set_password(passwordUser)
+        bypass.login(user)
+        if user.get_logged == True:
+            userid = User()
+            userid.id = 1
+            userid.name = user.get_tag()
+            userid.privileges = 3
+        else:
+            flask.abort(401)
+        if (content_type == 'application/json'):
+            
 
 app.run(host='192.168.0.8', port=5000, debug=True)

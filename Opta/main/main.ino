@@ -33,7 +33,7 @@ int a = 0;
 bool err = false;
 
 int standard = 4;
-const float VOLTAGE_MAX = 12;
+const float VOLTAGE_MAX = 6;
 const float RESOLUTION = 4095.0;
 
 void setup() {
@@ -68,13 +68,13 @@ void setup() {
 void loop() {
   
   for (i = 0; i < 4; i++){
-    if (analogRead(inputPins[i]) > 4 && analogRead(inputPins[i]) <= 3412){
+    if (analogRead(inputPins[i]) > 4 && analogRead(inputPins[i]) <= 4095){
       inputs[i] = analogRead(inputPins[i]) * (VOLTAGE_MAX/RESOLUTION);
     }
     else if (analogRead(inputPins[i]) <= 4){
       r = r+1;
       inputs[i] = 0;
-    }else if (analogRead(inputPins[i]) > 3412){
+    }else if (analogRead(inputPins[i]) > 4095){
       r = r+1;
       inputs[i] = 100;
     }

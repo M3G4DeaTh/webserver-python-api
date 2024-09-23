@@ -50,3 +50,8 @@ def registerDevice(self):
             return True
         except:
             return False
+        
+def getRegister(self):
+    if isinstance(self, device.iotDevice):
+        deviceRegister = databaseOBJ.readRaw("SELECT tag, password, standard, status FROM devices WHERE ")
+    elif isinstance(self, users.users):
