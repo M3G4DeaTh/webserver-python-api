@@ -1,6 +1,8 @@
 from infrastructure import database
+from flask import Flask
 import jwt
 import bcrypt
+import json
 from model import device
 from model import users
 #Database configuration
@@ -51,7 +53,92 @@ def registerDevice(self):
         except:
             return False
         
-def getRegister(self):
-    if isinstance(self, device.iotDevice):
-        deviceRegister = databaseOBJ.readRaw("SELECT tag, password, standard, status FROM devices WHERE ")
-    elif isinstance(self, users.users):
+def alterRegister(devicetag: str = None, newpassword: str = None):
+    if devicetag != '' and newpassword != '' and devicetag != None and newpassword != None:
+        token = jwt.encode({"tag": devicetag}, "secret", algorithm="HS256")
+        tag = token.split('.')
+        tag = tag[1]
+        try:
+            deviceRegister = databaseOBJ.readRaw("SELECT password FROM devices WHERE tag = '"+str(tag)+"'")
+            if deviceRegister != []:
+                if bcrypt.checkpw(newpassword.encode(), deviceRegister[0][0].encode()):
+                    response.headers['Error: '] = "password cannot be the same"
+                    return response
+                else:
+                    hash = bcrypt.hashpw(newpassword.encode(), bcrypt.gensalt())
+                    databaseOBJ.writeRaw("UPDATE devices SET password = '"+str(hash)+"' WHERE tag = '"+str(tag)+"' ")
+                    return True
+            else:
+                try:
+                    deviceRegister = databaseOBJ.readRaw("SELECT password FROM users WHERE tag = '"+str(tag)+"'")
+                    if deviceRegister != []:
+                        if bcrypt.checkpw(newpassword.encode(), deviceRegister[0][0].encode()):
+                            response = Flask.make_response('Response')
+                            response.headers['Error: '] = "password cannot be the same"
+                            return response
+                        else:
+                            hash = bcrypt.hashpw(newpassword.encode(), bcrypt.gensalt())
+                            databaseOBJ.writeRaw("UPDATE users SET password = '"+str(hash)+"' WHERE tag = '"+str(tag)+"' ")
+                            return True
+                    else:
+                        return False
+                except:
+                    return False
+        except:
+            return False
+        
+def alterStatus(devicetag: str, status: str = None):
+    try:
+        status = bool(status)
+        token = jwt.encode({"tag": devicetag}, "secret", algorithm="HS256")
+        tag = token.split('.')
+        tag = tag[1]
+        deviceRegister = databaseOBJ.readRaw("SELECT status FROM devices WHERE tag = '"+str(tag)+"'")
+        if deviceRegister != []:
+            databaseOBJ.writeRaw("UPDATE devices SET status= "+str(status)+" where tag = '"+str(tag)+"'")
+            return True
+        else:
+            try:
+                deviceRegister = databaseOBJ.readRaw("SELECT status FROM users WHERE tag = '"+str(tag)+"'")
+                if deviceRegister != []:
+                    databaseOBJ.writeRaw("UPDATE users SET status= "+str(status)+" where tag = '"+str(tag)+"'")
+                    return True
+                else:
+                    return False
+            except:
+                response = Flask.make_response('Response')
+                response.headers['Error: '] = "DeviceId invalid"
+                return response
+    except:
+        response = Flask.make_response('Response')
+        response.headers['Error: '] = "status invalid"
+        return response
+def alterStandard(devicetag: str, standard: str = None):
+    try:
+        standard = float(standard)
+        token = jwt.encode({"tag": devicetag}, "secret", algorithm="HS256")
+        tag = token.split('.')
+        tag = tag[1]
+        if databaseOBJ.writeRaw("UPDATE devices SET standard = '"+str(standard)+"' WHERE tag = '"+str(tag)+"'"):
+            response = Flask.make_response('Response')
+            response.headers['Succes: '] = "standard changed"
+            return response
+        else:
+            response = Flask.make_response('Response')
+            response.headers['Error: '] = "DeviceId invalid"
+            return response
+    except:
+        response = Flask.make_response('Response')
+        response.headers['Error: '] = "standard invalid"
+        return response
+        
+def getRegister():
+    data = databaseOBJ.readRaw("SELECT id, tag, standard, status from devices order by id asc")
+    register = {}
+    if data != []:
+        for i in range(len(data)):
+            register[str(data[i][0])] = []
+            register[str(data[i][0])].append(data[i][1])
+        return json.dumps(register, indent=4)
+    else:
+        return False

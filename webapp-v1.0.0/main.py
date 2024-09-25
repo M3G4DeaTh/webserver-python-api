@@ -118,10 +118,14 @@ def devices(id = None):
     else:
         flask.abort(405)
 
-@app.route('/register/<string:devicetag>', methods= ['GET'])
+
+@app.route('/register', methods=['GET'])
+@app.route('/register/<string:devicetag>/<string:standard>', methods= ['PUT'])
+@app.route('/register/<string:devicetag>/<string:status>', methods= ['PUT'])
+@app.route('/register/<string:devicetag>/<string:newpassword>', methods= ['PUT'])
 @app.route('/register/<string:tag>/<string:password>', methods= ['POST'])
 @app.route('/register/<string:tag>/<string:password>/<string:standard>', methods= ['POST'])
-def register(tag = None, password = None, standard = None):
+def register(tag = None, password = None, standard = None, devicetag = None, newpassword = None, status = None):
     if flask.request.method == 'POST':
         content_type = request.headers.get('Content-Type')
         tagUser = request.headers.get('tag')
@@ -150,15 +154,12 @@ def register(tag = None, password = None, standard = None):
                 userSys.set_tag(tag)
                 userSys.set_password(password)
             if registerUser.userValid(userSys):
-                try:
-                    registerUser.registerDevice(userSys)
-                except:
-                    flask.abort(405)
+                return registerUser.registerDevice(userSys)
             else:
                 response = flask.Flask.make_response('Response')
                 response.headers['Error: '] = 'User is already used!'
                 return response
-    elif flask.request.method == 'GET':
+    elif flask.request.method == 'PUT':
         content_type = request.headers.get('Content-Type')
         tagUser = request.headers.get('tag')
         passwordUser = request.headers.get('password')
@@ -174,6 +175,29 @@ def register(tag = None, password = None, standard = None):
         else:
             flask.abort(401)
         if (content_type == 'application/json'):
-            
+            if devicetag != None and newpassword != None:
+                return registerUser.alterRegister(str(devicetag), str(newpassword))
+            elif devicetag != None and status != None:
+                return registerUser.alterStatus(devicetag, status)
+            elif devicetag != None and standard != None:
+                return registerUser.alterStandard(devicetag, standard)
+
+    elif flask.request.method == 'GET':
+        content_type = request.headers.get('Content-Type')
+        tagUser = request.headers.get('tag')
+        passwordUser = request.headers.get('password')
+        user  = users.users('null', 'null', False)
+        user.set_tag(tagUser)
+        user.set_password(passwordUser)
+        bypass.login(user)
+        if user.get_logged == True:
+            userid = User()
+            userid.id = 1
+            userid.name = user.get_tag()
+            userid.privileges = 3
+        else:
+            flask.abort(401)
+        return registerUser.getRegister()
+        
             
 app.run(host='192.168.0.8', port=5000, debug=True)

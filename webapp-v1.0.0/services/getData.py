@@ -41,6 +41,8 @@ def getData(self: users.users, id: str):
             for i in range(len(columnName)):
                 register[str(columnName[i][0])] = []
                 register[str(columnName[i][0])].append(data[0][i])
-        return json.dumps(register, indent=4)
+            return json.dumps(register, indent=4)
+        else:
+            return False
     else:
         return False
