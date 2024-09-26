@@ -1,12 +1,12 @@
 
 #include <ArduinoHttpClient.h>
-#include <Ethernet.h>
+#include <WiFi.h>
 #include "arduino_secrets.h"
 
 
-int httpT(EthernetClient ethernetClient, float array[], float standard){
+int httpT(WiFiClient wifi, float array[], float standard){
 
-  HttpClient client = HttpClient(ethernetClient, SECRET_HOST, 5000); // IP address and port of the HTTP server.
+  HttpClient client = HttpClient(wifi, SECRET_HOST, 5000); // IP address and port of the HTTP server.
   String payload = "["+(String) array[0]+","+(String) array[1]+","+(String) array[2]+","+(String) array[3]+"]";
   int payloadLength = payload.length();
   // int result = client.post("/api/Machines/Receive", "Content-Type" : "application/json", "["+(String) array[0]+","+(String) array[0]+","+(String) array[0]+","+(String) array[0]+"]");

@@ -8,20 +8,19 @@
 */
 
 #include <Arduino.h>
-#include <Ethernet.h>
+#include <WiFi.h>
 #include "arduino_secrets.h"
 #include "http.h"
-
 #include "opta_info.h"
 
 
 
 OptaBoardInfo *info;
 OptaBoardInfo *boardInfo();
-EthernetClient ethernetClient;
+WiFiClient wifi;
 
 
-// int status = WL_IDLE_STATUS;
+int status = WL_IDLE_STATUS;
 const char *ssid = SECRET_SSID;
 const char *password = SECRET_PASS;
 
@@ -42,27 +41,31 @@ void setup() {
   pinMode(D1, OUTPUT);
   Serial.begin(9600);
   info = boardInfo();
+  // if (info->magic = 0xB5)
+  // {
+  //   // Attempt DHCP lease.
+  //   if (Ethernet.begin(info->mac_address) == 0)
+  //   {
+  //     err = true;
+  //   }
+  // }
+  // else
+  // {
+  //   err = true;
+  // }
   if (info->magic = 0xB5)
   {
-    // Attempt DHCP lease.
-    if (Ethernet.begin(info->mac_address) == 0)
-    {
-      err = true;
+    while ( status != WL_CONNECTED && attempts < 20) {
+      Serial.print("Attempting to connect to Network named: ");
+      Serial.println(ssid);                   // print the network name (SSID);
+
+      // Connect to WPA/WPA2 network:
+      status = WiFi.begin(ssid, password);
     }
   }
-  else
-  {
+  else{
     err = true;
   }
-
-  // while ( status != WL_CONNECTED) {
-  //   Serial.print("Attempting to connect to Network named: ");
-  //   Serial.println(ssid);                   // print the network name (SSID);
-
-  //   // Connect to WPA/WPA2 network:
-  //   status = WiFi.begin(ssid, password);
-  // }
-  
 }
 
 void loop() {
