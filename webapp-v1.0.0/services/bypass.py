@@ -25,11 +25,14 @@ def login(self):
         
         credentials = databaseOBJ.readRaw("select password, status from users where tag='" + tag+ "';")
     if credentials != []:
+        
         if bcrypt.checkpw(password.encode(), credentials[0][0].encode()) and bool(credentials[0][1]):
+            print(credentials)
             self.set_logged(True)
-            self.set_tag(tag)
+            
             return True
         else:
+            
             self.set_logged(False)
             return False
     else:

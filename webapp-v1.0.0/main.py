@@ -97,7 +97,7 @@ def devices(id = None):
         user.set_tag(tag)
         user.set_password(password)
         bypass.login(user)
-        if user.get_logged == True:
+        if user.get_logged():
             
             userid = User()
             userid.id = 1
@@ -120,12 +120,10 @@ def devices(id = None):
 
 
 @app.route('/register', methods=['GET'])
-@app.route('/register/<string:devicetag>/<string:standard>', methods= ['PUT'])
-@app.route('/register/<string:devicetag>/<string:status>', methods= ['PUT'])
-@app.route('/register/<string:devicetag>/<string:newpassword>', methods= ['PUT'])
+@app.route('/register/passwordUpdate/<string:devicetag>/<string:newpassword>', methods= ['PUT'])
 @app.route('/register/<string:tag>/<string:password>', methods= ['POST'])
 @app.route('/register/<string:tag>/<string:password>/<string:standard>', methods= ['POST'])
-def register(tag = None, password = None, standard = None, devicetag = None, newpassword = None, status = None):
+def register(tag = None, password = None, standard = None, devicetag = None, newpassword = None):
     if flask.request.method == 'POST':
         content_type = request.headers.get('Content-Type')
         tagUser = request.headers.get('tag')
@@ -134,7 +132,7 @@ def register(tag = None, password = None, standard = None, devicetag = None, new
         user.set_tag(tagUser)
         user.set_password(passwordUser)
         bypass.login(user)
-        if user.get_logged == True:
+        if user.get_logged():
             userid = User()
             userid.id = 1
             userid.name = user.get_tag()
@@ -156,9 +154,9 @@ def register(tag = None, password = None, standard = None, devicetag = None, new
             if registerUser.userValid(userSys):
                 return registerUser.registerDevice(userSys)
             else:
-                response = flask.Flask.make_response('Response')
-                response.headers['Error: '] = 'User is already used!'
-                return response
+                return 'User is already used!'
+        else:
+            return 'Content-Type not supported!'
     elif flask.request.method == 'PUT':
         content_type = request.headers.get('Content-Type')
         tagUser = request.headers.get('tag')
@@ -167,7 +165,7 @@ def register(tag = None, password = None, standard = None, devicetag = None, new
         user.set_tag(tagUser)
         user.set_password(passwordUser)
         bypass.login(user)
-        if user.get_logged == True:
+        if user.get_logged():
             userid = User()
             userid.id = 1
             userid.name = user.get_tag()
@@ -176,11 +174,10 @@ def register(tag = None, password = None, standard = None, devicetag = None, new
             flask.abort(401)
         if (content_type == 'application/json'):
             if devicetag != None and newpassword != None:
+                print(newpassword)
                 return registerUser.alterRegister(str(devicetag), str(newpassword))
-            elif devicetag != None and status != None:
-                return registerUser.alterStatus(devicetag, status)
-            elif devicetag != None and standard != None:
-                return registerUser.alterStandard(devicetag, standard)
+        else:
+            return 'Content-Type not supported!'
 
     elif flask.request.method == 'GET':
         content_type = request.headers.get('Content-Type')
@@ -190,14 +187,60 @@ def register(tag = None, password = None, standard = None, devicetag = None, new
         user.set_tag(tagUser)
         user.set_password(passwordUser)
         bypass.login(user)
-        if user.get_logged == True:
+        if user.get_logged():
             userid = User()
             userid.id = 1
             userid.name = user.get_tag()
             userid.privileges = 3
         else:
             flask.abort(401)
-        return registerUser.getRegister()
-        
-            
-app.run(host='192.168.0.8', port=5000, debug=True)
+        if (content_type == 'application/json'):
+            return registerUser.getRegister()
+        else:
+            return 'Content-Type not supported!'
+
+
+@app.route('/standardUpdate/<string:devicetag>/<string:standard>', methods= ['PUT'])
+def standardUpdate( standard = None, devicetag = None):
+    if flask.request.method == 'PUT':
+        content_type = request.headers.get('Content-Type')
+        tagUser = request.headers.get('tag')
+        passwordUser = request.headers.get('password')
+        user  = users.users('null', 'null', False)
+        user.set_tag(tagUser)
+        user.set_password(passwordUser)
+        bypass.login(user)
+        if user.get_logged():
+            userid = User()
+            userid.id = 1
+            userid.name = user.get_tag()
+            userid.privileges = 3
+        else:
+            flask.abort(401)
+        if (content_type == 'application/json'):
+            if devicetag != None and standard != None:
+               return registerUser.alterStandard(devicetag, standard)
+                    
+@app.route('/statusUpdate/<string:devicetag>/<string:status>', methods= ['PUT'])
+def statusUpdate( status = None, devicetag = None):
+    if flask.request.method == 'PUT':
+        content_type = request.headers.get('Content-Type')
+        tagUser = request.headers.get('tag')
+        passwordUser = request.headers.get('password')
+        user  = users.users('null', 'null', False)
+        user.set_tag(tagUser)
+        user.set_password(passwordUser)
+        bypass.login(user)
+        if user.get_logged():
+            userid = User()
+            userid.id = 1
+            userid.name = user.get_tag()
+            userid.privileges = 3
+        else:
+            flask.abort(401)
+        if (content_type == 'application/json'):
+            if devicetag != None and status != None:
+                return registerUser.alterStatus(devicetag, status)
+                
+
+app.run(host='10.104.2.115', port=5000, debug=True)

@@ -4,7 +4,7 @@
 #include "arduino_secrets.h"
 
 
-int httpT(WiFiClient wifi, float array[], float standard){
+int httpT(WiFiClient wifi, float array[]){
 
   HttpClient client = HttpClient(wifi, SECRET_HOST, 5000); // IP address and port of the HTTP server.
   String payload = "["+(String) array[0]+","+(String) array[1]+","+(String) array[2]+","+(String) array[3]+"]";
@@ -22,10 +22,7 @@ int httpT(WiFiClient wifi, float array[], float standard){
   int statusCode = client.responseStatusCode();
   String response = client.responseBody();
   if (statusCode == 200){
-    if (standard != response.toInt()){
-      standard = response.toInt();
-    }
-    return standard;
+    return response.toInt();
   }
   else{
     return -1;
