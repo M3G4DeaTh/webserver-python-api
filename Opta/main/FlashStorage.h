@@ -3,7 +3,7 @@
 
 using namespace mbed;
 
-char register(String standard) {
+int register(int standard) {
 
   Serial.println("FlashIAPBlockDevice Test");
   Serial.println("------------------------");  
@@ -34,7 +34,7 @@ char register(String standard) {
   Serial.println("Programmable block size: " + String((unsigned int) programBlockSize) + " bytes");
   Serial.println("Erasable block size: " + String((unsigned int) eraseBlockSize / 1024) + " KB");
      
-  String newMessage = standard;
+  String newMessage = String(standard);
   
   // Calculate the amount of bytes needed to store the message
   // This has to be a multiple of the program block size
@@ -48,7 +48,7 @@ char register(String standard) {
   Serial.println("Reading previous message...");
   blockDevice.read(buffer, 0, dataSize);
   if (buffer == newMessage){
-    return buffer
+    return int(buffer)
   }
   Serial.println(buffer);
 

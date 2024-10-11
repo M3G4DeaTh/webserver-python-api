@@ -30,8 +30,9 @@ const byte inputPins[] = { A0, A1, A2, A3 };
 int r = 0;
 int i = 0;
 int a = 0;
+int re = 6;
 bool err = false;
-String standard;
+
 const float VOLTAGE_MAX = 6;
 const float RESOLUTION = 4095.0;
 
@@ -85,11 +86,11 @@ void loop() {
   if (r < 2) {
     int result = httpT(wifi, inputs);
     Serial.println(r);
-    re = register(String(result));
+    re = register(re);
     if (result == re) {
       digitalWrite(LED_BUILTIN, HIGH);
       for (i = 0; i < 4; i++) {
-        if (inputs[i] > toInt(standard)) {
+        if (inputs[i] > re) {
           a = a + 1;
         }
       }
@@ -105,7 +106,7 @@ void loop() {
 
       digitalWrite(LED_BUILTIN, LOW);
       for (i = 0; i < 4; i++) {
-        if (inputs[i] > toInt(standard)) {
+        if (inputs[i] > re) {
           a = a + 1;
         }
       }
@@ -119,10 +120,10 @@ void loop() {
 
       Serial.println("fail!");
     } else {
-      register(String(result))
+      register(result);
       digitalWrite(LED_BUILTIN, HIGH);
       for (i = 0; i < 4; i++) {
-        if (inputs[i] > toInt(standard)) {
+        if (inputs[i] > re) {
           a = a + 1;
         }
       }
