@@ -39,39 +39,39 @@ const float RESOLUTION = 4095.0;
 // Caminho do arquivo no USB
 const char* wifi_config_file = "/wifi_config.txt";
 
-// Função para ler o SSID e a senha do arquivo de configuração no armazenamento USB
-bool readWifiConfig(String &ssidU, String &passwordU) {
-  // Inicializa o USBStorage
-  if (!storage.begin()) {
-    Serial.println("Falha ao inicializar o armazenamento USB.");
-    return false;
-  }
+// // Função para ler o SSID e a senha do arquivo de configuração no armazenamento USB
+// bool readWifiConfig(String &ssidU, String &passwordU) {
+//   // Inicializa o USBStorage
+//   if (!storage.begin()) {
+//     Serial.println("Falha ao inicializar o armazenamento USB.");
+//     return false;
+//   }
 
-  Folder dir = storage.getRootFolder();
-  std::vector<UFile> files = dir.getFiles();
-  // Abre o arquivo para leitura
-  UFile file = file.getPath();
-  file.seek(0);
-  char data;
-  // Ler as primeiras linhas do arquivo (espera-se que contenha "SSID:SENHA")
-  while (file.available()) {
-    data = file.read();
-    Serial.write(data);
-  }
-  String NewData = String(data);
-  int delimiterIndex = NewData.indexOf(':');
+//   Folder dir = storage.getRootFolder();
+//   std::vector<UFile> files = dir.getFiles();
+//   // Abre o arquivo para leitura
+//   UFile file = file.getPath();
+//   file.seek(0);
+//   char data;
+//   // Ler as primeiras linhas do arquivo (espera-se que contenha "SSID:SENHA")
+//   while (file.available()) {
+//     data = file.read();
+//     Serial.write(data);
+//   }
+//   String NewData = String(data);
+//   int delimiterIndex = NewData.indexOf(':');
 
-  if (delimiterIndex > 0) {
-    ssidU = NewData.substring(0, delimiterIndex);
-    passwordU = NewData.substring(delimiterIndex + 1);
-    file.close();
-    return true;
-  } else {
-    Serial.println("Formato inválido no arquivo de configuração.");
-    file.close();
-    return false;
-  }
-}
+//   if (delimiterIndex > 0) {
+//     ssidU = NewData.substring(0, delimiterIndex);
+//     passwordU = NewData.substring(delimiterIndex + 1);
+//     file.close();
+//     return true;
+//   } else {
+//     Serial.println("Formato inválido no arquivo de configuração.");
+//     file.close();
+//     return false;
+//   }
+// }
 
 void setup() {
   analogReadResolution(12);
@@ -102,35 +102,35 @@ void setup() {
     String ssidU, passwordU;
 
     // Ler a configuração do arquivo no armazenamento
-    if (readWifiConfig(ssidU, passwordU)) {
-      // Verifica se o SSID no arquivo é diferente do SSID pré-configurado
-      if (ssidU != ssid) {
-        Serial.println("SSID diferente! Mudando Wi-Fi...");
-        digitalWrite(LED_BUILTIN, HIGH);
-        digitalWrite(LED_BUILTIN, LOW);
-        // Desconecta do Wi-Fi atual
-        WiFi.disconnect();
-        delay(1000);
+    // if (readWifiConfig(ssidU, passwordU)) {
+    //   // Verifica se o SSID no arquivo é diferente do SSID pré-configurado
+    //   if (ssidU != ssid) {
+    //     Serial.println("SSID diferente! Mudando Wi-Fi...");
+    //     digitalWrite(LED_BUILTIN, HIGH);
+    //     digitalWrite(LED_BUILTIN, LOW);
+    //     // Desconecta do Wi-Fi atual
+    //     WiFi.disconnect();
+    //     delay(1000);
 
-        // Conecta ao novo Wi-Fi
-        WiFi.begin(ssidU.c_str(), passwordU.c_str());
+    //     // Conecta ao novo Wi-Fi
+    //     WiFi.begin(ssidU.c_str(), passwordU.c_str());
 
-        // Verifica o status da nova conexão
-        Serial.print("Conectando ao novo Wi-Fi");
-        int attempts = 0;
-        while (WiFi.status() != WL_CONNECTED && attempts < 20) {
-          delay(500);
-          Serial.print(".");
-          attempts++;
-        }
-        Serial.println("\nConectado ao novo Wi-Fi!");
-      } else {
-        digitalWrite(LED_BUILTIN, HIGH);
-        Serial.println("SSID é o mesmo, nenhuma alteração necessária.");
-      }
-    } else {
-      Serial.println("Erro ao ler a configuração de Wi-Fi.");
-    }
+    //     // Verifica o status da nova conexão
+    //     Serial.print("Conectando ao novo Wi-Fi");
+    //     int attempts = 0;
+    //     while (WiFi.status() != WL_CONNECTED && attempts < 20) {
+    //       delay(500);
+    //       Serial.print(".");
+    //       attempts++;
+    //     }
+    //     Serial.println("\nConectado ao novo Wi-Fi!");
+    //   } else {
+    //     digitalWrite(LED_BUILTIN, HIGH);
+    //     Serial.println("SSID é o mesmo, nenhuma alteração necessária.");
+    //   }
+    // } else {
+    //   Serial.println("Erro ao ler a configuração de Wi-Fi.");
+    // }
    
   } else {
     err = true;
@@ -208,10 +208,11 @@ void loop() {
 
   } else {
     digitalWrite(D0, LOW);
+    digitalWrite(LED_BUILTIN, HIGH);
     digitalWrite(D1, HIGH);
   }
   r = 0;
   a = 0;
-  delay(1000);  // Ping every 5s.
+  delay(500);  // Ping every 5s.
 }
 
