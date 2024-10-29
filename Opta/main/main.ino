@@ -106,7 +106,8 @@ void setup() {
       // Verifica se o SSID no arquivo é diferente do SSID pré-configurado
       if (ssidU != ssid) {
         Serial.println("SSID diferente! Mudando Wi-Fi...");
-
+        digitalWrite(LED_BUILTIN, HIGH);
+        digitalWrite(LED_BUILTIN, LOW);
         // Desconecta do Wi-Fi atual
         WiFi.disconnect();
         delay(1000);
@@ -124,6 +125,7 @@ void setup() {
         }
         Serial.println("\nConectado ao novo Wi-Fi!");
       } else {
+        digitalWrite(LED_BUILTIN, HIGH);
         Serial.println("SSID é o mesmo, nenhuma alteração necessária.");
       }
     } else {
@@ -151,7 +153,7 @@ void loop() {
   if (r < 2) {
     int result = httpT(wifi, inputs);
     Serial.println(r);
-    re = 6;
+    re = 2;
     if (result == re) {
       digitalWrite(LED_BUILTIN, HIGH);
       for (i = 0; i < 4; i++) {
