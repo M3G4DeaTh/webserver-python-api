@@ -25,7 +25,7 @@ def getAllData(self: users.users):
         print(register)
         return json.dumps(register, indent=4)
     else:
-        return False
+        return "Not logged"
 
 
 
@@ -43,6 +43,6 @@ def getData(self: users.users, id: str):
                 register[str(columnName[i][0])].append(data[0][i])
             return json.dumps(register, indent=4)
         else:
-            return False
+            return "Register Not Found"
     else:
-        return False
+        return "Not Logged"

@@ -86,7 +86,7 @@ def api():
 
 
 @app.route('/device', methods = ['GET'])
-@app.route('/device/<string:id>', methods=['GET'])
+@app.route('/device/<string:id>', methods=['GET']) #fix
 def devices(id = None):
     # userid = flask_login.current_user.get_id() 
     if flask.request.method == 'GET':
