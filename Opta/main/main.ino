@@ -12,14 +12,14 @@
 #include <WiFi.h>
 #include "arduino_secrets.h"
 #include "http.h"
-#include <Arduino_UnifiedStorage.h>
+// #include <Arduino_UnifiedStorage.h>
 #include "opta_info.h"
 
 
 OptaBoardInfo *info;
 OptaBoardInfo *boardInfo();
 WiFiClient wifi;
-USBStorage storage;            // Create an instance for interacting with USB storage
+// USBStorage storage;            // Create an instance for interacting with USB storage
 
 int status = WL_IDLE_STATUS;
 const char *ssid = SECRET_SSID;
@@ -31,6 +31,7 @@ int r = 0;
 int i = 0;
 int a = 0;
 int re = 6;
+int result = 0;
 bool err = false;
 
 const float VOLTAGE_MAX = 6;
@@ -39,7 +40,11 @@ const float RESOLUTION = 4095.0;
 // Caminho do arquivo no USB
 const char* wifi_config_file = "/wifi_config.txt";
 
+<<<<<<< Updated upstream
 // // Função para ler o SSID e a senha do arquivo de configuração no armazenamento USB
+=======
+// Função para ler o SSID e a senha do arquivo de configuração no armazenamento USB
+>>>>>>> Stashed changes
 // bool readWifiConfig(String &ssidU, String &passwordU) {
 //   // Inicializa o USBStorage
 //   if (!storage.begin()) {
@@ -99,9 +104,13 @@ void setup() {
     }
 
     // Variáveis para armazenar SSID e senha lidos do armazenamento
-    String ssidU, passwordU;
+    // String ssidU, passwordU;
 
+<<<<<<< Updated upstream
     // Ler a configuração do arquivo no armazenamento
+=======
+    // // Ler a configuração do arquivo no armazenamento
+>>>>>>> Stashed changes
     // if (readWifiConfig(ssidU, passwordU)) {
     //   // Verifica se o SSID no arquivo é diferente do SSID pré-configurado
     //   if (ssidU != ssid) {
@@ -151,17 +160,23 @@ void loop() {
     }
   }
   if (r < 2) {
-    int result = httpT(wifi, inputs);
+    if (WiFi.status() == WL_CONNECTED){
+      int result = httpT(wifi, inputs);
+    }
+    else{
+      int result = -1;
+    }
     Serial.println(r);
-    re = 2;
+    re = 0.04;
     if (result == re) {
       digitalWrite(LED_BUILTIN, HIGH);
       for (i = 0; i < 4; i++) {
         if (inputs[i] > re) {
           a = a + 1;
+          Serial.println(inputs[i]);
         }
       }
-      if (a == 4) {
+      if (a > 2) {
         digitalWrite(D0, HIGH);
         digitalWrite(D1, LOW);
       } else {
@@ -174,10 +189,11 @@ void loop() {
       digitalWrite(LED_BUILTIN, LOW);
       for (i = 0; i < 4; i++) {
         if (inputs[i] > re) {
+          Serial.println(inputs[i]);
           a = a + 1;
         }
       }
-      if (a == 4) {
+      if (a > 2) {
         digitalWrite(D0, HIGH);
         digitalWrite(D1, LOW);
       } else {
@@ -191,10 +207,11 @@ void loop() {
       digitalWrite(LED_BUILTIN, HIGH);
       for (i = 0; i < 4; i++) {
         if (inputs[i] > result) {
+          Serial.println(inputs[i]);
           a = a + 1;
         }
       }
-      if (a == 4) {
+      if (a > 2) {
         digitalWrite(D0, HIGH);
         digitalWrite(D1, LOW);
       } else {
