@@ -105,12 +105,6 @@ void setup() {
 
     // Variáveis para armazenar SSID e senha lidos do armazenamento
     // String ssidU, passwordU;
-
-<<<<<<< Updated upstream
-    // Ler a configuração do arquivo no armazenamento
-=======
-    // // Ler a configuração do arquivo no armazenamento
->>>>>>> Stashed changes
     // if (readWifiConfig(ssidU, passwordU)) {
     //   // Verifica se o SSID no arquivo é diferente do SSID pré-configurado
     //   if (ssidU != ssid) {
