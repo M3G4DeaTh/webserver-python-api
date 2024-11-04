@@ -10,8 +10,8 @@ from flask import request
 #Flask configuration
 versao=''
 app = flask.Flask(__name__)
-app.secret_key = 'key'
-#app.secret_key = os.environ['SECRETKEY']
+# app.secret_key = 'key'
+app.secret_key = os.environ['SECRETKEY']
 #Flask-Login configuration
 login_manager = flask_login.LoginManager()
 login_manager.init_app(app)
@@ -243,4 +243,4 @@ def statusUpdate( status = None, devicetag = None):
                 return registerUser.alterStatus(devicetag, status)
                 
 
-app.run(host='10.104.2.115', port=5000, debug=True)
+# app.run(host='10.104.2.115', port=5000, debug=True)

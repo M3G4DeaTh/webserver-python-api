@@ -1,13 +1,14 @@
 import jwt
 import bcrypt
+import os
 from infrastructure import database
 from model import device
 from model import users
 
 
 #Database configuration
-#databaseOBJ=database.postgresDatabase(user=os.environ['DBUSER'], password=os.environ['DBPASSWORD'], host=os.environ['DBHOST'], dbname=os.environ['DBNAME'])
-databaseOBJ=database.postgresDatabase(host='localhost')
+databaseOBJ=database.postgresDatabase(user=os.environ['DBUSER'], password=os.environ['DBPASSWORD'], host=os.environ['DBHOST'], dbname=os.environ['DBNAME'])
+# databaseOBJ=database.postgresDatabase(host='localhost')
 
 
 def login(self):
