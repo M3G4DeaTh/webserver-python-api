@@ -1,5 +1,5 @@
 #define SECRET_SSID "ICW_4002"
 #define SECRET_PASS "_sn%5VY9LT"
-#define SECRET_HOST "192.168.0.8"
+#define SECRET_HOST "yourhosttHere.com.br"
 #define SECRET_TAG "Opta01"
 #define SECRET_KEY "Synvia123"
