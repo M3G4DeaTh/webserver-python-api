@@ -3,11 +3,12 @@ from flask import Flask
 import jwt
 import bcrypt
 import json
+import os
 from model import device
 from model import users
 #Database configuration
-#databaseOBJ=database.postgresDatabase(user=os.environ['DBUSER'], password=os.environ['DBPASSWORD'], host=os.environ['DBHOST'], dbname=os.environ['DBNAME'])
-databaseOBJ=database.postgresDatabase(host='localhost')
+databaseOBJ=database.postgresDatabase(user=os.environ['DBUSER'], password=os.environ['DBPASSWORD'], host=os.environ['DBHOST'], dbname=os.environ['DBNAME'])
+# databaseOBJ=database.postgresDatabase(host='localhost')
 
 def userValid(self):
     if isinstance(self, device.iotDevice):
