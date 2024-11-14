@@ -315,14 +315,14 @@ void wifiUpdate() {
     passwordU = NewData.substring(delimiterIndex + 1);
     if (ssidU != ssid) {
       Serial.println("SSID diferente! Mudando Wi-Fi...");
-      // Desconecta do Wi-Fi atual
+      // wifi disconnect
       WiFi.disconnect();
       delay(1000);
 
-      // Conecta ao novo Wi-Fi
+      // Connecting to a new wifi connection
       WiFi.begin(ssidU.c_str(), passwordU.c_str());
 
-      // Verifica o status da nova conexão
+      // Wifi'status verify
       Serial.print("Conectando ao novo Wi-Fi");
       int attempts = 0;
       while (WiFi.status() != WL_CONNECTED && attempts < 5) {
