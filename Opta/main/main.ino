@@ -313,7 +313,7 @@ void wifiUpdate() {
   if (delimiterIndex > 0) {
     ssidU = NewData.substring(0, delimiterIndex);
     passwordU = NewData.substring(delimiterIndex + 1);
-    if (ssidU != ssid) {
+    if (ssidU != ssid || password != passwordU) {
       Serial.println("SSID diferente! Mudando Wi-Fi...");
       // wifi disconnect
       WiFi.disconnect();
