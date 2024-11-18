@@ -3,7 +3,7 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 
 class postgresDatabase():
-    def __init__(self, user='postgres', password='postgres', host='localhost', dbname='postgres'):
+    def __init__(self, user='postgres', password='postgres', host='localhost', dbname='synvia'):
         self.lastError = None
         self.connectionString="user="+user+" password="+password+" host="+host+" dbname="+dbname
 

@@ -4,8 +4,8 @@ import os
 import json
 
 #Database configuration
-databaseOBJ=database.postgresDatabase(user=os.environ['DBUSER'], password=os.environ['DBPASSWORD'], host=os.environ['DBHOST'], dbname=os.environ['DBNAME'])
-# databaseOBJ=database.postgresDatabase(host='localhost')
+#databaseOBJ=database.postgresDatabase(user=os.environ['DBUSER'], password=os.environ['DBPASSWORD'], host=os.environ['DBHOST'], dbname=os.environ['DBNAME'])
+databaseOBJ=database.postgresDatabase(host='localhost')
 
 def getAllData(self: users.users):
     if self.get_logged():

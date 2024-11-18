@@ -7,8 +7,8 @@ from model import users
 
 
 #Database configuration
-databaseOBJ=database.postgresDatabase(user=os.environ['DBUSER'], password=os.environ['DBPASSWORD'], host=os.environ['DBHOST'], dbname=os.environ['DBNAME'])
-# databaseOBJ=database.postgresDatabase(host='localhost')
+#databaseOBJ=database.postgresDatabase(user=os.environ['DBUSER'], password=os.environ['DBPASSWORD'], host=os.environ['DBHOST'], dbname=os.environ['DBNAME'])
+databaseOBJ=database.postgresDatabase(host='localhost')
 
 
 def login(self):
@@ -17,13 +17,14 @@ def login(self):
         token = jwt.encode({"tag": str(self.get_tag())}, "secret", algorithm="HS256")
         tag = token.split('.')
         tag = tag[1]
+        
         credentials = databaseOBJ.readRaw("select password, status from devices where tag='" + tag+ "';")
     elif isinstance(self, users.users):
         password = self.get_password()
         token = jwt.encode({"tag": str(self.get_tag())}, "secret", algorithm="HS256")
         tag = token.split('.')
         tag = tag[1]
-        
+        print(tag)
         credentials = databaseOBJ.readRaw("select password, status from users where tag='" + tag+ "';")
     if credentials != []:
         
