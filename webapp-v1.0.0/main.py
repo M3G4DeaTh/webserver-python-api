@@ -4,20 +4,19 @@ import flask_login
 from model import device, users
 from services import bypass, register, getData, registerUser
 from flask import request
-from flasgger import Swagger
 
 ######################################################## INIT ########################################################
 
 #Flask configuration
 versao=''
 app = flask.Flask(__name__)
-app.secret_key = 'key'
-#app.secret_key = os.environ['SECRETKEY']
+# app.secret_key = 'key'
+app.secret_key = os.environ['SECRETKEY']
 #Flask-Login configuration
 # login_manager = flask_login.LoginManager()
 # login_manager.init_app(app)
 
-swagger = Swagger(app)
+
 
 ######################################################## AUTHENTICATION ####################################################
 
@@ -39,7 +38,6 @@ def load_user(userid: User):
 ######################################################## CRUD RESOURCES ####################################################
 @app.route('/api/Machines/Receive', methods=['post'])
 def api():
-    
     if flask.request.method == 'POST':
         
         content_type = request.headers.get('Content-Type')
@@ -87,38 +85,6 @@ def api():
 @app.route('/device', methods = ['GET'])
 @app.route('/device/<string:id>', methods=['GET']) #fix
 def devices(id = None):
-    """
-    Retorna uma lista dos dispositivos disponiveis.
-    ---
-    parameters:
-      - name: tag
-        in: header
-        type: string
-        required: true
-        description: Usuario para acesso à api.
-      - name: password
-        in: header
-        type: string
-        required: true
-        description: Senha para acesso à api.
-      - name: Content-Type
-        in: header
-        type: string
-        default: application/json
-        required: true
-        description: Content-Type.
-      - name: id
-        in: path
-        type: integer
-        default: 1
-        required: false
-        description: id do dispositivo.
-    responses:
-      200:
-        description: Uma lista dos registros ou de um unico dipositivo citando a data das medições e se passou ou não pelo criterio de pressão.
-        examples:
-          application/json: [{"id": 1, "id_device": "1", "date": "05/09/24 16:34:21", "input01": "1", "input02": "1", "input03": "1", "input04": "1", "status": "true"}]
-    """
     # userid = flask_login.current_user.get_id() 
     if flask.request.method == 'GET':
         content_type = request.headers.get('Content-Type')
@@ -274,4 +240,4 @@ def statusUpdate( status = None, devicetag = None):
                 return registerUser.alterStatus(devicetag, status)
                 
 
-app.run(debug=True)
+# app.run(debug=True)

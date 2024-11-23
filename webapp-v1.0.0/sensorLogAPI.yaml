@@ -1,0 +1,567 @@
+openapi: 3.1.0
+info:
+  title: API de registro de logs do dispositivo
+  description: API para gerenciar e armazenar os logs gerados no dispositivo de verificação de pressão
+  version: 1.0.0
+servers:
+  - url: https://api.example.com/v1
+paths:
+  /device:
+    get:
+      summary: Lista todos os logs dos dispositivos registrados
+      parameters:
+        - name: tag
+          in: header
+          required: true
+          description: Usuario para acesso à api.
+          schema:
+            type: string
+        - name: password
+          in: header
+          required: true
+          description: Senha do usuario para acesso à api.
+          schema:
+            type: string
+            format: password
+        - name: Content-Type
+          in: header
+          required: true
+          default: application/json
+          description: Content-Type.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista dos dispositivos com seu respectivo log.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Device'
+        '401':
+          description: Não autorizado. O usuario/senha de autenticação é inválido ou está ausente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unauthorized"
+        '405':
+          description: Método não permitido. Use um método HTTP suportado, como GET.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Method Not Allowed"
+  /device/{id}:
+    get:
+      summary: Busca um usuário pelo ID
+      parameters:
+        - name: tag
+          in: header
+          required: true
+          description: Usuario para acesso à api.
+          schema:
+            type: string
+        - name: password
+          in: header
+          required: true
+          description: Senha do usuario para acesso à api.
+          schema:
+            type: string
+            format: password
+        - name: Content-Type
+          in: header
+          required: true
+          default: application/json
+          description: Content-Type.
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          description: id do dispositivo.
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lista do dispositivo com seu respectivo log.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Device'
+        '401':
+          description: Não autorizado. O usuario/senha de autenticação é inválido ou está ausente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unauthorized"
+        '405':
+          description: Método não permitido. Use um método HTTP suportado, como GET.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Method Not Allowed"
+  /register:
+    get:
+      summary: Retorna uma lista dos dispositivos registrados.
+      parameters:
+        - name: tag
+          in: header
+          required: true
+          description: Usuario para acesso à api.
+          schema:
+            type: string
+        - name: password
+          in: header
+          required: true
+          description: Senha do usuario para acesso à api.
+          schema:
+            type: string
+            format: password
+        - name: Content-Type
+          in: header
+          required: true
+          default: application/json
+          description: Content-Type.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista dos dispositivos com suas respectivas tags, status e pressão padrão registradas.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DeviceRegister'
+        '401':
+          description: Não autorizado. O usuario/senha de autenticação é inválido ou está ausente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unauthorized"
+        '405':
+          description: Método não permitido. Use um método HTTP suportado, como GET.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Method Not Allowed"
+  /register/passwordUpdate/{devicetag}/{newpassword}:
+    put:
+      summary: Atualiza a senha de um dispositivo especificado.
+      parameters:
+        - name: tag
+          in: header
+          required: true
+          description: Usuario para acesso à api.
+          schema:
+            type: string
+        - name: password
+          in: header
+          required: true
+          description: Senha do usuario para acesso à api.
+          schema:
+            type: string
+            format: password
+        - name: Content-Type
+          in: header
+          required: true
+          default: application/json
+          description: Content-Type.
+          schema:
+            type: string
+        - name: devicetag
+          in: path
+          required: true
+          description: Tag do dispositivo a ser mudada a senha.
+          schema:
+            type: string
+        - name: newpassword
+          in: path
+          required: true
+          description: Senha nova do dispositivo.
+          schema:
+            type: string
+            format: password
+      responses:
+        '200':
+          description: Status da alteração.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Register not found! / Password cannot be the same"
+                  message:
+                    type: string
+                    example: "Password updated!"
+        '401':
+          description: Não autorizado. O usuario/senha de autenticação é inválido ou está ausente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unauthorized"
+        '405':
+          description: Método não permitido. Use um método HTTP suportado, como PUT.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Method Not Allowed"
+  /register/{tag}/{password}:
+    post:
+      summary: Cadastra um novo usuario para a utilização da API.
+      parameters:
+        - name: tag
+          in: header
+          required: true
+          description: Usuario para acesso à api.
+          schema:
+            type: string
+        - name: password
+          in: header
+          required: true
+          description: Senha do usuario para acesso à api.
+          schema:
+            type: string
+            format: password
+        - name: Content-Type
+          in: header
+          required: true
+          default: application/json
+          description: Content-Type.
+          schema:
+            type: string
+        - name: tag
+          in: path
+          required: true
+          description: Tag do novo usuario.
+          schema:
+            type: string
+        - name: password
+          in: path
+          required: true
+          description: Senha do novo usuario.
+          schema:
+            type: string
+            format: password
+      responses:
+        '200':
+          description: Status do cadastro.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Wrong data! / User already registered!"
+                  message:
+                    type: string
+                    example: "New User registered!"
+        '401':
+          description: Não autorizado. O usuario/senha de autenticação é inválido ou está ausente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unauthorized"
+        '405':
+          description: Método não permitido. Use um método HTTP suportado, como POST.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Method Not Allowed"
+  /register/{tag}/{password}/{standard}:
+    post:
+      summary: Cadastra um novo dispositivo para a utilização da API.
+      parameters:
+        - name: tag
+          in: header
+          required: true
+          description: Usuario para acesso à api.
+          schema:
+            type: string
+        - name: password
+          in: header
+          required: true
+          description: Senha do usuario para acesso à api.
+          schema:
+            type: string
+            format: password
+        - name: Content-Type
+          in: header
+          required: true
+          default: application/json
+          description: Content-Type.
+          schema:
+            type: string
+        - name: tag
+          in: path
+          required: true
+          description: Tag do novo dispositivo.
+          schema:
+            type: string
+        - name: password
+          in: path
+          required: true
+          description: Senha do novo dispositivo.
+          schema:
+            type: string
+            format: password
+        - name: standard
+          in: path
+          required: true
+          description: Padrão de pressão do novo dispositivo.
+          default: 0.02
+          schema:
+            type: number
+      responses:
+        '200':
+          description: Status do cadastro.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Wrong data! / Device already registered! / Invalid standard value!"
+                  message:
+                    type: string
+                    example: "New Device registered!"
+        '401':
+          description: Não autorizado. O usuario/senha de autenticação é inválido ou está ausente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unauthorized"
+        '405':
+          description: Método não permitido. Use um método HTTP suportado, como POST.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Method Not Allowed"
+  /standardUpdate/{devicetag}/{standard}:
+    put:
+      summary: Atualiza o padrão de pressão de um dispositivo especificado.
+      parameters:
+        - name: tag
+          in: header
+          required: true
+          description: Usuario para acesso à api.
+          schema:
+            type: string
+        - name: password
+          in: header
+          required: true
+          description: Senha do usuario para acesso à api.
+          schema:
+            type: string
+            format: password
+        - name: Content-Type
+          in: header
+          required: true
+          default: application/json
+          description: Content-Type.
+          schema:
+            type: string
+        - name: devicetag
+          in: path
+          required: true
+          description: Tag do dispositivo.
+          schema:
+            type: string
+        - name: standard
+          in: path
+          required: true
+          description: Padrão de pressão do dispositivo.
+          default: 0.02
+          schema:
+            type: number
+      responses:
+        '200':
+          description: Status da atualização.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid DeviceId! / Invalid standard value!"
+                  message:
+                    type: string
+                    example: "Standard changed"
+        '401':
+          description: Não autorizado. O usuario/senha de autenticação é inválido ou está ausente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unauthorized"
+        '405':
+          description: Método não permitido. Use um método HTTP suportado, como PUT.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Method Not Allowed"
+  /statusUpdate/{devicetag}/{status}:
+    put:
+      summary: Atualiza o status do dispositivo especificado.
+      parameters:
+        - name: tag
+          in: header
+          required: true
+          description: Usuario para acesso à api.
+          schema:
+            type: string
+        - name: password
+          in: header
+          required: true
+          description: Senha do usuario para acesso à api.
+          schema:
+            type: string
+            format: password
+        - name: Content-Type
+          in: header
+          required: true
+          default: application/json
+          description: Content-Type.
+          schema:
+            type: string
+        - name: devicetag
+          in: path
+          required: true
+          description: Tag do dispositivo.
+          schema:
+            type: string
+        - name: status
+          in: path
+          required: true
+          description: Status do dispositivo.
+          default: "True"
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Status da atualização.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Device not found! / Status invalid!"
+                  message:
+                    type: string
+                    example: "Status updated!"
+        '401':
+          description: Não autorizado. O usuario/senha de autenticação é inválido ou está ausente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unauthorized"
+        '405':
+          description: Método não permitido. Use um método HTTP suportado, como PUT.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Method Not Allowed"
+components:
+  schemas:
+    Device:
+      type: object
+      properties:
+        id:
+          type: integer
+        id_device:
+          type: integer
+        date:
+          type: string
+        input01:
+          type: integer
+        input02:
+          type: integer
+        input03:
+          type: integer
+        input04:
+          type: integer
+        status:
+          type: boolean
+    DeviceRegister:
+      type: object
+      properties:
+        id:
+          type: integer
+        tag:
+          type: string
+        standard:
+          type: number
+        status:
+          type: boolean

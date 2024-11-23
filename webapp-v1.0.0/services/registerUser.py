@@ -7,8 +7,8 @@ import os
 from model import device
 from model import users
 #Database configuration
-#databaseOBJ=database.postgresDatabase(user=os.environ['DBUSER'], password=os.environ['DBPASSWORD'], host=os.environ['DBHOST'], dbname=os.environ['DBNAME'])
-databaseOBJ=database.postgresDatabase(host='localhost')
+databaseOBJ=database.postgresDatabase(user=os.environ['DBUSER'], password=os.environ['DBPASSWORD'], host=os.environ['DBHOST'], dbname=os.environ['DBNAME'])
+# databaseOBJ=database.postgresDatabase(host='localhost')
 
 def userValid(self):
     if isinstance(self, device.iotDevice):
@@ -42,8 +42,12 @@ def registerDevice(self):
             return 'Invalid standard value!'
         hash = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
         try:
-            databaseOBJ.writeRaw("INSERT INTO devices(tag, password, standard, status) VALUES('"+str(tag)+"', '"+hash.decode()+"', '"+str(self.get_standard())+"', TRUE)")
-            return 'New Device registered!'
+            check = databaseOBJ.readRaw("SELECT * FROM devices WHERE tag = '"+str(tag)+"'")
+            if check == []:
+                databaseOBJ.writeRaw("INSERT INTO devices(tag, password, standard, status) VALUES('"+str(tag)+"', '"+hash.decode()+"', '"+str(self.get_standard())+"', TRUE)")
+                return 'New Device registered!'
+            else:
+                return 'Device already registered!'
         except:
             return 'Wrong data!'
     elif isinstance(self, users.users):
@@ -53,8 +57,12 @@ def registerDevice(self):
         tag = tag[1]
         hash = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
         try:
-            databaseOBJ.writeRaw("INSERT INTO users(tag, password, status) VALUES('"+str(tag)+"', '"+hash.decode()+"', TRUE)")
-            return 'New User registered!'
+            check = databaseOBJ.readRaw("SELECT * FROM users WHERE tag = '"+str(tag)+"'")
+            if check == []:
+                databaseOBJ.writeRaw("INSERT INTO users(tag, password, status) VALUES('"+str(tag)+"', '"+hash.decode()+"', TRUE)")
+                return 'New User registered!'
+            else:
+                return 'User already registered!'
         except:
             return 'Wrong data!'
         
@@ -92,14 +100,14 @@ def alterRegister(devicetag: str = None, newpassword: str = None):
 def alterStatus(devicetag: str, status: str = None):
     try:
         status = int(status)
-        return "status invalid"
+        return "Status invalid"
     except:
         if status == 'True' or status == 'true':
             status = True
         elif status == 'False' or status == 'false':
             status = False
         else:
-            return "status invalid"
+            return "Status invalid"
         token = jwt.encode({"tag": devicetag}, "secret", algorithm="HS256")
         tag = token.split('.')
         tag = tag[1]
