@@ -1,6 +1,6 @@
 webserver-python-api
 
-The main purpose of the project its to be a device that catches the sensor's data and send it to an API, the API by its self storage and checks if the pressure meets the requirements.
+The main purpose of the project its to be a device that catches the sensor's data and send it to an API, the API by itself storage and checks if the pressure meets the requirements.
 In the API we have a route to check the device, in this route we check if the device is already registered in the database, if not, the API return the '401' status.
 In the client side, the API checks if the user is registered, if not gives back the same status (401).
 After the login, the client granted the access to see the logs of the devices, register a new device or user, change password, disable the device, and update the standard pressure of which device that is already registered.
