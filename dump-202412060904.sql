@@ -184,7 +184,6 @@ ALTER TABLE ONLY public.log ALTER COLUMN id SET DEFAULT nextval('public.log_id_s
 -- Data for Name: devices; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO public.devices VALUES (1, 'eyJ0YWciOiJPcHRhMDEifQ', '$2b$12$.qRkwya2N0n2n.yita7ege1k/0vBcwnb8SetUiAkpDlX/dJtGsolC', 0.2, true);
 
 
 --
@@ -1724,7 +1723,6 @@ INSERT INTO public.log VALUES (1523, 1, '2024-09-19 10:40:08.831562', 0, 0, 0, 0
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO public.users VALUES (1, 'eyJ0YWciOiJ1c2VyMDEifQ', '$2b$12$3qZpqyrJ0zwIq77JB8bdh.qYP2oZGQA.//CGfs53NP6vDgW1fCLja', true);
 
 
 --
